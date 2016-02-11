@@ -739,11 +739,6 @@ CLLocationManager * locationManager;
     return range.length != 0;
 }
 
-- (BOOL)containsString:(NSString *)str
-{
-    return [self myContainsString:str];
-}
-
 -(NSString*)specialDateFromTimeStamp
 {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];

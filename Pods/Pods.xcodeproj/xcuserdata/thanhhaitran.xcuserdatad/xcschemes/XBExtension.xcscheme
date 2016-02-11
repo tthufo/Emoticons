@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'F74E17F53F44189CE0D600BE'
+               BlueprintIdentifier = 'A9E28675F36DC31EB4627A00'
                BlueprintName = 'XBExtension'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libXBExtension.a'>

@@ -10,7 +10,7 @@
 
 #import "TFHpple.h"
 
-#import "DLAVAlertView.h"
+#import "XMLReader.h"
 
 @import GoogleMobileAds;
 
@@ -55,8 +55,6 @@ typedef enum _bannerType
     
     count = 1;
     
-    self.title = [NSArray arrayWithContentsOfPlist:@"menu"][0][@"title"];
-
     [self.navigationController.navigationBar setTitleTextAttributes:
      @{NSForegroundColorAttributeName:[AVHexColor colorWithHexString:@"#FFFFFF"]}];
     
@@ -81,8 +79,6 @@ typedef enum _bannerType
     
     dataList = [NSMutableArray new];
     
-    menuList = [[NSMutableArray alloc] initWithArray:[NSArray arrayWithContentsOfPlist:@"menu"]];
-    
     __block  EM_First_ViewController * weakSelf = self;
     
     [collectionView addFooterWithBlock:^{
@@ -91,15 +87,37 @@ typedef enum _bannerType
         
     }];
     
-    url = [NSArray arrayWithContentsOfPlist:@"menu"][0][@"cat"];
-    
-    [self didRequestData];
-    
     menu = [self returnView];
     
     [self createBanner];
     
     [self createAndLoadInterstitial];
+    
+    [[LTRequest sharedInstance] didRequestInfo:@{@"absoluteLink":@"https://dl.dropboxusercontent.com/s/nkxnf14bldgndyo/Emoticon.plist",@"overrideError":@(1),@"overrideLoading":@(1),@"host":self} withCache:^(NSString *cacheString) {
+    } andCompletion:^(NSString *responseString, NSError *error, BOOL isValidated) {
+        
+        NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError * er = nil;
+        NSDictionary *dict = [XMLReader dictionaryForXMLData:data
+                                                     options:XMLReaderOptionsProcessNamespaces
+                                                       error:&er];
+        
+        NSMutableDictionary * option = [[XMLReader recursionRemoveTextNode:dict] mutableCopy];
+        
+        [self didPrepareData:[option[@"plist"][@"dict"][@"key"] boolValue]];
+        
+    }];
+}
+
+- (void)didPrepareData:(BOOL)isShow
+{
+    self.title = [NSArray arrayWithContentsOfPlist:isShow ? @"menu" : @"menuShort"][0][@"title"];
+
+    url = [NSArray arrayWithContentsOfPlist:isShow ? @"menu" : @"menuShort"][0][@"cat"];
+    
+    menuList = [[NSMutableArray alloc] initWithArray:[NSArray arrayWithContentsOfPlist:isShow ? @"menu" : @"menuShort"]];
+    
+    [self didRequestData];
 }
 
 -(void)createBanner
@@ -243,7 +261,9 @@ typedef enum _bannerType
     }
     
     NSURL * requestUrl = [NSURL URLWithString:[NSString stringWithFormat:url, count]];
+    //NSURL * requestUrl = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.mogicons.com/en/stickers/emoticons/?page=2"]];
 
+    
     NSString * cc = [NSString stringWithFormat:@"%i",count + 100];
     
     dispatch_queue_t imageQueue = dispatch_queue_create([cc UTF8String],NULL);
@@ -252,15 +272,17 @@ typedef enum _bannerType
         
         NSError* error = nil;
         
-        NSData* tutorialsHtmlData = [NSData dataWithContentsOfURL:requestUrl options:NSDataReadingUncached error:&error];
+        NSData* htmlData = [NSData dataWithContentsOfURL:requestUrl options:NSDataReadingUncached error:&error];
         
-        TFHpple *tutorialsParser = [TFHpple hppleWithHTMLData:tutorialsHtmlData];
+//        NSLog(@"%@",[NSString stringWithUTF8String:[htmlData bytes]]);
         
-        NSString *tutorialsXpathQueryString = @"//div[@class='mdCMN05Img']/img";
+        TFHpple *parser = [TFHpple hppleWithHTMLData:htmlData];
         
-        NSArray *tutorialsNodes = [tutorialsParser searchWithXPathQuery:tutorialsXpathQueryString];
+        NSString *pathQuery = @"//div[@class='mdCMN05Img']/img";
         
-        for (TFHppleElement *element in tutorialsNodes)
+        NSArray *nodes = [parser searchWithXPathQuery:pathQuery];
+        
+        for (TFHppleElement *element in nodes)
         {
             [dataList addObject:@{@"image":[element objectForKey:@"src"]}];
         }
@@ -304,6 +326,18 @@ typedef enum _bannerType
     
     ((UILabel*)[self withView:cell tag:11]).textColor = [AVHexColor colorWithHexString:@"#EDC8AE"];
 
+//    if([menuList[indexPath.row][@"title"] isEqualToString:@"New"])
+//    {
+//        ((UILabel*)[self withView:cell tag:11]).textColor = [AVHexColor colorWithHexString:@""];
+//        
+//        ((UILabel*)[self withView:cell tag:11]).alpha = 0.6;
+//        
+//        [UIView animateWithDuration:1 delay:0.5 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
+//            
+//            ((UILabel*)[self withView:cell tag:11]).alpha = 1;
+//            
+//        } completion:nil];
+//    }
     cell.accessoryType = [menuList[indexPath.row][@"title"] isEqualToString:self.title] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
         
     return cell;
@@ -508,3 +542,4 @@ typedef enum _bannerType
 }
 
 @end
+

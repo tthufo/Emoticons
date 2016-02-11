@@ -148,8 +148,6 @@
 
 - (BOOL)myContainsString:(NSString*)other;
 
-- (BOOL)containsString:(NSString *)str;
-
 - (NSString*)specialDateFromTimeStamp;
 
 - (NSString*)specialDateAndTimeFromTimeStamp;

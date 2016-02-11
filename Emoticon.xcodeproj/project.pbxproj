@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		661AEBCEA2B21A09C30D4B3E /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7C0A4F2EC8150F98B2B85D4 /* libPods.a */; };
+		FC0AC8791C6C5C1C00020DBC /* menuShort.plist in Resources */ = {isa = PBXBuildFile; fileRef = FC0AC8781C6C5C1C00020DBC /* menuShort.plist */; };
+		FC0AC87C1C6C65BC00020DBC /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = FC0AC87B1C6C65BC00020DBC /* XMLReader.m */; };
 		FC501C4C1C64560A00D12530 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FC501C4B1C64560A00D12530 /* main.m */; };
 		FC501C4F1C64560A00D12530 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FC501C4E1C64560A00D12530 /* AppDelegate.m */; };
 		FC501C521C64560A00D12530 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC501C511C64560A00D12530 /* ViewController.m */; };
@@ -31,6 +33,9 @@
 		78206E8A4B4E25603CA5E787 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		BBADB6E188FD83CD95FCC5B7 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		C7C0A4F2EC8150F98B2B85D4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC0AC8781C6C5C1C00020DBC /* menuShort.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = menuShort.plist; sourceTree = "<group>"; };
+		FC0AC87A1C6C65BC00020DBC /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLReader.h; sourceTree = "<group>"; };
+		FC0AC87B1C6C65BC00020DBC /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLReader.m; sourceTree = "<group>"; };
 		FC501C471C64560A00D12530 /* Emoticon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Emoticon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC501C4B1C64560A00D12530 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FC501C4D1C64560A00D12530 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -160,7 +165,10 @@
 		FC501C751C66476500D12530 /* Plist */ = {
 			isa = PBXGroup;
 			children = (
+				FC0AC87A1C6C65BC00020DBC /* XMLReader.h */,
+				FC0AC87B1C6C65BC00020DBC /* XMLReader.m */,
 				FC501C761C66477D00D12530 /* menu.plist */,
+				FC0AC8781C6C5C1C00020DBC /* menuShort.plist */,
 				FC69EB911C6728D50088AA48 /* CustomIOS7AlertView.h */,
 				FC69EB921C6728D50088AA48 /* CustomIOS7AlertView.m */,
 				FC69EB941C6729500088AA48 /* EM_MenuView.h */,
@@ -232,6 +240,7 @@
 				FC501C5A1C64560A00D12530 /* LaunchScreen.storyboard in Resources */,
 				FC501C701C64F82C00D12530 /* EM_Cells.xib in Resources */,
 				FC501C641C64F3DB00D12530 /* Default-568h@2x.png in Resources */,
+				FC0AC8791C6C5C1C00020DBC /* menuShort.plist in Resources */,
 				FC501C6E1C64F69E00D12530 /* EM_First_ViewController.xib in Resources */,
 				FC501C571C64560A00D12530 /* Assets.xcassets in Resources */,
 				FC501C771C66477D00D12530 /* menu.plist in Resources */,
@@ -303,6 +312,7 @@
 				FC501C4C1C64560A00D12530 /* main.m in Sources */,
 				FC69EB931C6728D50088AA48 /* CustomIOS7AlertView.m in Sources */,
 				FC501C6D1C64F69E00D12530 /* EM_First_ViewController.m in Sources */,
+				FC0AC87C1C6C65BC00020DBC /* XMLReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

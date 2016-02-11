@@ -19,11 +19,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>DLAlertView.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>FBPLUGIN-FBPLUGIN.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -107,32 +102,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>17935F72D982278750F1077DF5480AA9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>23C02C495B4ABEC40BD52E0409128063</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2BB9ECC53A3FEEFB0453F7EB4F6B0662</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>35E553033C53223999625D90D329BDB1</key>
+		<key>288BC6BD7C868723E7C45202A9DF0BB6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>4056A1F8A3322E6B2C9FDBF214AE36DE</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>480D8CFC34F5FDE1936959B05197068C</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>5A7F3FA5B9FF46B0E8E719AABABDED26</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -173,6 +158,11 @@
 			<true/>
 		</dict>
 		<key>B2DB50DE75305647A519F98CBE3DA4A6</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>B61F6B4BBA23C006B15F3B17A96116AF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
