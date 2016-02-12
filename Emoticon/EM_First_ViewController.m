@@ -89,9 +89,9 @@ typedef enum _bannerType
     
     menu = [self returnView];
     
-    [self createBanner];
-    
-    [self createAndLoadInterstitial];
+//    [self createBanner];
+//    
+//    [self createAndLoadInterstitial];
     
     [[LTRequest sharedInstance] didRequestInfo:@{@"absoluteLink":@"https://dl.dropboxusercontent.com/s/nkxnf14bldgndyo/Emoticon.plist",@"overrideError":@(1),@"overrideLoading":@(1),@"host":self} withCache:^(NSString *cacheString) {
     } andCompletion:^(NSString *responseString, NSError *error, BOOL isValidated) {
@@ -107,6 +107,34 @@ typedef enum _bannerType
         [self didPrepareData:[option[@"plist"][@"dict"][@"key"] boolValue]];
         
     }];
+    
+    [[StartAds sharedInstance] didShowBannerAdsWithInfor:@{@"host":self,@"Y":@(screenHeight - 64 - 50)} andCompletion:^(BannerEvent event, NSError *error, id bannerAd) {
+        switch (event)
+        {
+            case AdsDone:
+            {
+                collectionView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0);
+            }
+                break;
+            case AdsFailed:
+            {
+                collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+            }
+                break;
+            case AdsWillPresent:
+            {
+                
+            }
+                break;
+            case AdsWillLeave:
+            {
+                
+            }
+                break;
+            default:
+                break;
+        }
+    }];
 }
 
 - (void)didPrepareData:(BOOL)isShow
@@ -120,76 +148,76 @@ typedef enum _bannerType
     [self didRequestData];
 }
 
--(void)createBanner
-{
-    mBannerType = BANNER_TYPE;
-    
-    if(mBannerType <= kBanner_Portrait_Bottom)
-        mBannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
-    else
-        mBannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerLandscape];
-    
-//    mBannerView = [[GADBannerView alloc] initWithFrame:CGRectMake((screenWidth - mBannerView.frame.size.width) / 2, screenHeight - 64 -64 - 50, mBannerView.frame.size.width, mBannerView.frame.size.height)];
-    
-//    mBannerView.backgroundColor = [UIColor redColor];
-    
-    mBannerView.delegate = self;
-    
-    mBannerView.frame = CGRectMake((screenWidth - mBannerView.frame.size.width) / 2, screenHeight - 64 - 50, mBannerView.frame.size.width, mBannerView.frame.size.height);
-    
-    mBannerView.adUnitID = bannerAPI;
-    
-    mBannerView.rootViewController = self;
-    
-    [self.view addSubview:mBannerView];
-    
-    GADRequest *request = [GADRequest request];
-    
-    
-//#ifdef DEBUG
-    
-//    request.testDevices = @[
-//                            kGADSimulatorID,@"a104de0d0aca5165d505f82e691ba8cd"
-//                            ];
-//#endif
-    
-    [mBannerView loadRequest:request];
-}
-
-- (void)adViewDidReceiveAd:(GADBannerView *)bannerView
-{
-    collectionView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0);
-}
-
-- (void)adView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(GADRequestError *)error
-{
-    collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-}
-
-- (void)createAndLoadInterstitial
-{
-    interstitial = [[GADInterstitial alloc] initWithAdUnitID:fullBannerAPI];
-    
-    interstitial.delegate = self;
-    
-    GADRequest *request = [GADRequest request];
-    
-//    request.testDevices = @[
-//                            kGADSimulatorID,@"a104de0d0aca5165d505f82e691ba8cd"
-//                            ];
-    
-    [interstitial loadRequest:request];
-}
-
-- (void)interstitial:(GADInterstitial *)interstitial didFailToReceiveAdWithError:(GADRequestError *)error
-{
-    //NSLog(@"%@",error);
-}
-
-- (void)interstitialDidDismissScreen:(GADInterstitial *)interstitial
-{
-    [self createAndLoadInterstitial];
-}
+//-(void)createBanner
+//{
+//    mBannerType = BANNER_TYPE;
+//    
+//    if(mBannerType <= kBanner_Portrait_Bottom)
+//        mBannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
+//    else
+//        mBannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerLandscape];
+//    
+////    mBannerView = [[GADBannerView alloc] initWithFrame:CGRectMake((screenWidth - mBannerView.frame.size.width) / 2, screenHeight - 64 -64 - 50, mBannerView.frame.size.width, mBannerView.frame.size.height)];
+//    
+////    mBannerView.backgroundColor = [UIColor redColor];
+//    
+//    mBannerView.delegate = self;
+//    
+//    mBannerView.frame = CGRectMake((screenWidth - mBannerView.frame.size.width) / 2, screenHeight - 64 - 50, mBannerView.frame.size.width, mBannerView.frame.size.height);
+//    
+//    mBannerView.adUnitID = bannerAPI;
+//    
+//    mBannerView.rootViewController = self;
+//    
+//    [self.view addSubview:mBannerView];
+//    
+//    GADRequest *request = [GADRequest request];
+//    
+//    
+////#ifdef DEBUG
+//    
+////    request.testDevices = @[
+////                            kGADSimulatorID,@"a104de0d0aca5165d505f82e691ba8cd"
+////                            ];
+////#endif
+//    
+//    [mBannerView loadRequest:request];
+//}
+//
+//- (void)adViewDidReceiveAd:(GADBannerView *)bannerView
+//{
+//    collectionView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0);
+//}
+//
+//- (void)adView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(GADRequestError *)error
+//{
+//    collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+//}
+//
+//- (void)createAndLoadInterstitial
+//{
+//    interstitial = [[GADInterstitial alloc] initWithAdUnitID:fullBannerAPI];
+//    
+//    interstitial.delegate = self;
+//    
+//    GADRequest *request = [GADRequest request];
+//    
+////    request.testDevices = @[
+////                            kGADSimulatorID,@"a104de0d0aca5165d505f82e691ba8cd"
+////                            ];
+//    
+//    [interstitial loadRequest:request];
+//}
+//
+//- (void)interstitial:(GADInterstitial *)interstitial didFailToReceiveAdWithError:(GADRequestError *)error
+//{
+//    //NSLog(@"%@",error);
+//}
+//
+//- (void)interstitialDidDismissScreen:(GADInterstitial *)interstitial
+//{
+//    [self createAndLoadInterstitial];
+//}
 
 - (void)didPressShare
 {
@@ -230,8 +258,6 @@ typedef enum _bannerType
         
         collectionView.userInteractionEnabled = isMenu;
         
-//        collectionView.alpha = !isMenu ? 0.3 : 1;
-        
     } completion:^(BOOL finished) {
         
         if (finished && isMenu && menu.frame.origin.x != 0)
@@ -239,8 +265,6 @@ typedef enum _bannerType
             [menu removeFromSuperview];
         }
         
-//        collectionView.transform = CGAffineTransformMakeScale(isMenu ? 1 : 0.95, isMenu ? 1 : 0.95);
-
     }];
 }
 
@@ -261,9 +285,7 @@ typedef enum _bannerType
     }
     
     NSURL * requestUrl = [NSURL URLWithString:[NSString stringWithFormat:url, count]];
-    //NSURL * requestUrl = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.mogicons.com/en/stickers/emoticons/?page=2"]];
 
-    
     NSString * cc = [NSString stringWithFormat:@"%i",count + 100];
     
     dispatch_queue_t imageQueue = dispatch_queue_create([cc UTF8String],NULL);
@@ -274,11 +296,11 @@ typedef enum _bannerType
         
         NSData* htmlData = [NSData dataWithContentsOfURL:requestUrl options:NSDataReadingUncached error:&error];
         
-//        NSLog(@"%@",[NSString stringWithUTF8String:[htmlData bytes]]);
-        
         TFHpple *parser = [TFHpple hppleWithHTMLData:htmlData];
         
         NSString *pathQuery = @"//div[@class='mdCMN05Img']/img";
+        
+//        NSString *pathQuery = @"//div[@class='sticker-icons-container']";
         
         NSArray *nodes = [parser searchWithXPathQuery:pathQuery];
         
@@ -298,7 +320,6 @@ typedef enum _bannerType
             if(count == 1)
                 
                 [collectionView setContentOffset:CGPointZero animated:NO];
-            
         });
     });
 }
@@ -326,18 +347,6 @@ typedef enum _bannerType
     
     ((UILabel*)[self withView:cell tag:11]).textColor = [AVHexColor colorWithHexString:@"#EDC8AE"];
 
-//    if([menuList[indexPath.row][@"title"] isEqualToString:@"New"])
-//    {
-//        ((UILabel*)[self withView:cell tag:11]).textColor = [AVHexColor colorWithHexString:@""];
-//        
-//        ((UILabel*)[self withView:cell tag:11]).alpha = 0.6;
-//        
-//        [UIView animateWithDuration:1 delay:0.5 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
-//            
-//            ((UILabel*)[self withView:cell tag:11]).alpha = 1;
-//            
-//        } completion:nil];
-//    }
     cell.accessoryType = [menuList[indexPath.row][@"title"] isEqualToString:self.title] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
         
     return cell;
@@ -468,7 +477,7 @@ typedef enum _bannerType
             [self addValue:[NSString stringWithFormat:@"%i", k] andKey:@"detail"];
         }
         
-        if([[self getValue:@"detail"] intValue] % 4 == 0 && interstitial.isReady)
+        if([[self getValue:@"detail"] intValue] % 4 == 0) //&& interstitial.isReady)
         {
             [self performSelector:@selector(showAds) withObject:nil afterDelay:0.5];
         }
@@ -478,7 +487,34 @@ typedef enum _bannerType
 
 - (void)showAds
 {
-    [interstitial presentFromRootViewController:self];
+//    [interstitial presentFromRootViewController:self];
+    [[StartAds sharedInstance] didShowFullAdsWithInfor:@{} andCompletion:^(BannerEvent event, NSError *error, id bannerAd) {
+        switch (event)
+        {
+            case AdsDone:
+            {
+                
+            }
+                break;
+            case AdsFailed:
+            {
+                
+            }
+                break;
+            case AdsWillPresent:
+            {
+                
+            }
+                break;
+            case AdsWillLeave:
+            {
+                
+            }
+                break;
+            default:
+                break;
+        }
+    }];
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo

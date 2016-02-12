@@ -10,6 +10,9 @@
 		661AEBCEA2B21A09C30D4B3E /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7C0A4F2EC8150F98B2B85D4 /* libPods.a */; };
 		FC0AC8791C6C5C1C00020DBC /* menuShort.plist in Resources */ = {isa = PBXBuildFile; fileRef = FC0AC8781C6C5C1C00020DBC /* menuShort.plist */; };
 		FC0AC87C1C6C65BC00020DBC /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = FC0AC87B1C6C65BC00020DBC /* XMLReader.m */; };
+		FC0B08911C6E443F008B58D9 /* StartAds.m in Sources */ = {isa = PBXBuildFile; fileRef = FC0B088E1C6E443F008B58D9 /* StartAds.m */; };
+		FC0B08921C6E443F008B58D9 /* StartApp.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FC0B088F1C6E443F008B58D9 /* StartApp.bundle */; };
+		FC0B08931C6E443F008B58D9 /* StartApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC0B08901C6E443F008B58D9 /* StartApp.framework */; };
 		FC501C4C1C64560A00D12530 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FC501C4B1C64560A00D12530 /* main.m */; };
 		FC501C4F1C64560A00D12530 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FC501C4E1C64560A00D12530 /* AppDelegate.m */; };
 		FC501C521C64560A00D12530 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC501C511C64560A00D12530 /* ViewController.m */; };
@@ -36,6 +39,10 @@
 		FC0AC8781C6C5C1C00020DBC /* menuShort.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = menuShort.plist; sourceTree = "<group>"; };
 		FC0AC87A1C6C65BC00020DBC /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLReader.h; sourceTree = "<group>"; };
 		FC0AC87B1C6C65BC00020DBC /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLReader.m; sourceTree = "<group>"; };
+		FC0B088D1C6E443F008B58D9 /* StartAds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartAds.h; sourceTree = "<group>"; };
+		FC0B088E1C6E443F008B58D9 /* StartAds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartAds.m; sourceTree = "<group>"; };
+		FC0B088F1C6E443F008B58D9 /* StartApp.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = StartApp.bundle; sourceTree = "<group>"; };
+		FC0B08901C6E443F008B58D9 /* StartApp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = StartApp.framework; sourceTree = "<group>"; };
 		FC501C471C64560A00D12530 /* Emoticon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Emoticon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC501C4B1C64560A00D12530 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FC501C4D1C64560A00D12530 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -68,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC0B08931C6E443F008B58D9 /* StartApp.framework in Frameworks */,
 				FC501C721C65035100D12530 /* CoreFoundation.framework in Frameworks */,
 				661AEBCEA2B21A09C30D4B3E /* libPods.a in Frameworks */,
 			);
@@ -94,6 +102,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		FC0B088C1C6E442D008B58D9 /* Ads */ = {
+			isa = PBXGroup;
+			children = (
+				FC0B088D1C6E443F008B58D9 /* StartAds.h */,
+				FC0B088E1C6E443F008B58D9 /* StartAds.m */,
+				FC0B088F1C6E443F008B58D9 /* StartApp.bundle */,
+				FC0B08901C6E443F008B58D9 /* StartApp.framework */,
+			);
+			name = Ads;
+			sourceTree = "<group>";
+		};
 		FC501C3E1C64560A00D12530 = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +134,7 @@
 		FC501C491C64560A00D12530 /* Emoticon */ = {
 			isa = PBXGroup;
 			children = (
+				FC0B088C1C6E442D008B58D9 /* Ads */,
 				FC501C751C66476500D12530 /* Plist */,
 				FC501C691C64F66A00D12530 /* ViewController */,
 				FC501C681C64F5FC00D12530 /* Default */,
@@ -239,6 +259,7 @@
 			files = (
 				FC501C5A1C64560A00D12530 /* LaunchScreen.storyboard in Resources */,
 				FC501C701C64F82C00D12530 /* EM_Cells.xib in Resources */,
+				FC0B08921C6E443F008B58D9 /* StartApp.bundle in Resources */,
 				FC501C641C64F3DB00D12530 /* Default-568h@2x.png in Resources */,
 				FC0AC8791C6C5C1C00020DBC /* menuShort.plist in Resources */,
 				FC501C6E1C64F69E00D12530 /* EM_First_ViewController.xib in Resources */,
@@ -309,6 +330,7 @@
 				FC501C521C64560A00D12530 /* ViewController.m in Sources */,
 				FC69EB961C6729500088AA48 /* EM_MenuView.m in Sources */,
 				FC501C4F1C64560A00D12530 /* AppDelegate.m in Sources */,
+				FC0B08911C6E443F008B58D9 /* StartAds.m in Sources */,
 				FC501C4C1C64560A00D12530 /* main.m in Sources */,
 				FC69EB931C6728D50088AA48 /* CustomIOS7AlertView.m in Sources */,
 				FC501C6D1C64F69E00D12530 /* EM_First_ViewController.m in Sources */,
@@ -430,6 +452,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Thanh Hai Tran (N3994DUH8M)";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Emoticon",
+				);
 				GCC_PREFIX_HEADER = Emoticon/PrefixHeader.pch;
 				INFOPLIST_FILE = Emoticon/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
@@ -449,6 +475,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Thanh Hai Tran (2A57FFFJMN)";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Emoticon",
+				);
 				GCC_PREFIX_HEADER = Emoticon/PrefixHeader.pch;
 				INFOPLIST_FILE = Emoticon/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
