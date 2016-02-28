@@ -25,6 +25,8 @@
     sdk.appID = kStartAppId;
     sdk.devID = kStartAppDev;
     
+    [System addValue:@{@"banner":@"0",@"fullBanner":@"0",@"adsMob":@"0"} andKey:@"adsInfo"];
+    
     [[LTRequest sharedInstance] initRequest];
     
     if([UINavigationBar conformsToProtocol:@protocol(UIAppearanceContainer)])

@@ -24,4 +24,8 @@
 
 #import "FB.h"
 
+#import "XMLReader.h"
+
+#import "DropAlert.h"
+
 //#endif /* FBPlugInHeader_h */

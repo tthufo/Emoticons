@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		661AEBCEA2B21A09C30D4B3E /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7C0A4F2EC8150F98B2B85D4 /* libPods.a */; };
 		FC0AC8791C6C5C1C00020DBC /* menuShort.plist in Resources */ = {isa = PBXBuildFile; fileRef = FC0AC8781C6C5C1C00020DBC /* menuShort.plist */; };
-		FC0AC87C1C6C65BC00020DBC /* XMLReader.m in Sources */ = {isa = PBXBuildFile; fileRef = FC0AC87B1C6C65BC00020DBC /* XMLReader.m */; };
-		FC0B08911C6E443F008B58D9 /* StartAds.m in Sources */ = {isa = PBXBuildFile; fileRef = FC0B088E1C6E443F008B58D9 /* StartAds.m */; };
 		FC0B08921C6E443F008B58D9 /* StartApp.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FC0B088F1C6E443F008B58D9 /* StartApp.bundle */; };
 		FC0B08931C6E443F008B58D9 /* StartApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC0B08901C6E443F008B58D9 /* StartApp.framework */; };
 		FC501C4C1C64560A00D12530 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FC501C4B1C64560A00D12530 /* main.m */; };
@@ -30,6 +28,7 @@
 		FC501C771C66477D00D12530 /* menu.plist in Resources */ = {isa = PBXBuildFile; fileRef = FC501C761C66477D00D12530 /* menu.plist */; };
 		FC69EB931C6728D50088AA48 /* CustomIOS7AlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC69EB921C6728D50088AA48 /* CustomIOS7AlertView.m */; };
 		FC69EB961C6729500088AA48 /* EM_MenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = FC69EB951C6729500088AA48 /* EM_MenuView.m */; };
+		FC724E941C83537500BF4B8A /* Ads.m in Sources */ = {isa = PBXBuildFile; fileRef = FC724E931C83537500BF4B8A /* Ads.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,10 +36,6 @@
 		BBADB6E188FD83CD95FCC5B7 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		C7C0A4F2EC8150F98B2B85D4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC0AC8781C6C5C1C00020DBC /* menuShort.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = menuShort.plist; sourceTree = "<group>"; };
-		FC0AC87A1C6C65BC00020DBC /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLReader.h; sourceTree = "<group>"; };
-		FC0AC87B1C6C65BC00020DBC /* XMLReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLReader.m; sourceTree = "<group>"; };
-		FC0B088D1C6E443F008B58D9 /* StartAds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartAds.h; sourceTree = "<group>"; };
-		FC0B088E1C6E443F008B58D9 /* StartAds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartAds.m; sourceTree = "<group>"; };
 		FC0B088F1C6E443F008B58D9 /* StartApp.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = StartApp.bundle; sourceTree = "<group>"; };
 		FC0B08901C6E443F008B58D9 /* StartApp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = StartApp.framework; sourceTree = "<group>"; };
 		FC501C471C64560A00D12530 /* Emoticon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Emoticon.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,6 +63,8 @@
 		FC69EB921C6728D50088AA48 /* CustomIOS7AlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomIOS7AlertView.m; sourceTree = "<group>"; };
 		FC69EB941C6729500088AA48 /* EM_MenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EM_MenuView.h; sourceTree = "<group>"; };
 		FC69EB951C6729500088AA48 /* EM_MenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EM_MenuView.m; sourceTree = "<group>"; };
+		FC724E921C83537500BF4B8A /* Ads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ads.h; sourceTree = "<group>"; };
+		FC724E931C83537500BF4B8A /* Ads.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ads.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,8 +102,8 @@
 		FC0B088C1C6E442D008B58D9 /* Ads */ = {
 			isa = PBXGroup;
 			children = (
-				FC0B088D1C6E443F008B58D9 /* StartAds.h */,
-				FC0B088E1C6E443F008B58D9 /* StartAds.m */,
+				FC724E921C83537500BF4B8A /* Ads.h */,
+				FC724E931C83537500BF4B8A /* Ads.m */,
 				FC0B088F1C6E443F008B58D9 /* StartApp.bundle */,
 				FC0B08901C6E443F008B58D9 /* StartApp.framework */,
 			);
@@ -185,8 +182,6 @@
 		FC501C751C66476500D12530 /* Plist */ = {
 			isa = PBXGroup;
 			children = (
-				FC0AC87A1C6C65BC00020DBC /* XMLReader.h */,
-				FC0AC87B1C6C65BC00020DBC /* XMLReader.m */,
 				FC501C761C66477D00D12530 /* menu.plist */,
 				FC0AC8781C6C5C1C00020DBC /* menuShort.plist */,
 				FC69EB911C6728D50088AA48 /* CustomIOS7AlertView.h */,
@@ -330,11 +325,10 @@
 				FC501C521C64560A00D12530 /* ViewController.m in Sources */,
 				FC69EB961C6729500088AA48 /* EM_MenuView.m in Sources */,
 				FC501C4F1C64560A00D12530 /* AppDelegate.m in Sources */,
-				FC0B08911C6E443F008B58D9 /* StartAds.m in Sources */,
+				FC724E941C83537500BF4B8A /* Ads.m in Sources */,
 				FC501C4C1C64560A00D12530 /* main.m in Sources */,
 				FC69EB931C6728D50088AA48 /* CustomIOS7AlertView.m in Sources */,
 				FC501C6D1C64F69E00D12530 /* EM_First_ViewController.m in Sources */,
-				FC0AC87C1C6C65BC00020DBC /* XMLReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

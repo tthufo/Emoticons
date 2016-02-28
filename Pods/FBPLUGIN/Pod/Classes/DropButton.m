@@ -45,6 +45,41 @@ static DropButton * shareButton = nil;
     return shareButton;
 }
 
+- (void)didDropDownWithData:(NSArray*)dataList andInfo:(NSDictionary*)dict andCompletion:(DropButtonCompletion)completion
+{
+    completionBlock = completion;
+    
+    if(dropDown == nil)
+    {
+        template = nil;
+        
+        template = [[NSDictionary new] dictionaryWithPlist:self.pList];
+        
+        if(!template)
+        {
+            return;
+        }
+        
+        CGFloat f = [template[@"height"] floatValue];
+        
+        CGRect windowRect = [dict[@"rect"] CGRectValue];
+        
+        dropDown = [NIDropDown new];
+        
+        dropDown._template = template;
+        
+        dropDown.delegate = self;
+        
+        [dropDown showDropDownWithRect:windowRect andHeight:&f andData:dataList andDirection:template[@"direction"]];
+    }
+    else
+    {
+        [dropDown hideDropDown];
+        
+        dropDown = nil;
+    }
+}
+
 - (void)didDropDownWithData:(NSArray*)dataList andCompletion:(DropButtonCompletion)completion
 {
     completionBlock = completion;
@@ -194,7 +229,7 @@ static DropButton * shareButton = nil;
         
         [self addSubview:tableView];
 
-        cover = [UIButton buttonWithType:UIButtonTypeSystem];
+        cover = [UIButton buttonWithType:UIButtonTypeCustom];
         
         cover.backgroundColor = [UIColor blackColor];
         
@@ -300,7 +335,7 @@ static DropButton * shareButton = nil;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self hideDropDown];
-    selectedDetails = @{@"data":self.datalist[indexPath.row]};
+    selectedDetails = @{@"data":self.datalist[indexPath.row],@"index":@(indexPath.row)};
     [self myDelegate];
 }
 
@@ -312,3 +347,19 @@ static DropButton * shareButton = nil;
 
 
 @end
+
+
+@implementation DropButton (pList)
+
+- (void)setPListName:(NSString *)pListName
+{
+    self.pList = pListName;
+}
+
+- (NSString*)pListName
+{
+    return self.pList;
+}
+
+@end
+

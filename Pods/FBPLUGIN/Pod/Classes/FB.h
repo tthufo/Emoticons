@@ -24,6 +24,8 @@ typedef void (^FBCompletion)(NSString * responseString, id object, int errorCode
 - (void)startShareWithInfo:(NSArray*)items andBase:(UIView*)baseView andRoot:(UIViewController*)base andCompletion:(FBCompletion)completion;
 - (void)startPickImageWithOption:(BOOL)isCamera andBase:(UIView*)baseView andRoot:(UIViewController*)base andCompletion:(FBCompletion)completion;
 
+- (void)didShareFacebook:(NSDictionary*)dict andCompletion:(FBCompletion)completion;
+
 @property (nonatomic, retain) NSString * facebookAppID;
 
 

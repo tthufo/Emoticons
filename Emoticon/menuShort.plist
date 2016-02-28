@@ -4,12 +4,6 @@
 <array>
 	<dict>
 		<key>title</key>
-		<string>Top </string>
-		<key>cat</key>
-		<string>https://store.line.me/stickershop/showcase/top_creators/en?page=%d</string>
-	</dict>
-	<dict>
-		<key>title</key>
 		<string>New</string>
 		<key>cat</key>
 		<string>https://store.line.me/stickershop/showcase/new_creators/en?page=%d</string>

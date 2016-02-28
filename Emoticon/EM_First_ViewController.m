@@ -10,23 +10,9 @@
 
 #import "TFHpple.h"
 
-#import "XMLReader.h"
+#define ratio 0.55
 
-@import GoogleMobileAds;
-
-typedef enum _bannerType
-{
-    kBanner_Portrait_Top,
-    kBanner_Portrait_Bottom,
-    kBanner_Landscape_Top,
-    kBanner_Landscape_Bottom,
-}BannerType;
-
-#define BANNER_TYPE kBanner_Portrait_Bottom
-
-#define ratio 0.55//IS_IPAD ? 0.55 : 0.55
-
-@interface EM_First_ViewController ()<UITableViewDataSource, UITableViewDelegate, GADInterstitialDelegate, GADBannerViewDelegate>
+@interface EM_First_ViewController ()<UITableViewDataSource, UITableViewDelegate>
 {
     NSMutableArray * dataList, * menuList;
     
@@ -38,11 +24,7 @@ typedef enum _bannerType
     
     UIView * menu;
     
-    GADBannerView *mBannerView;
-    
-    GADInterstitial *interstitial;
-    
-    BannerType mBannerType;
+    BOOL isShow;
 }
 
 @end
@@ -52,7 +34,7 @@ typedef enum _bannerType
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+        
     count = 1;
     
     [self.navigationController.navigationBar setTitleTextAttributes:
@@ -89,52 +71,121 @@ typedef enum _bannerType
     
     menu = [self returnView];
     
-//    [self createBanner];
-//    
-//    [self createAndLoadInterstitial];
-    
-    [[LTRequest sharedInstance] didRequestInfo:@{@"absoluteLink":@"https://dl.dropboxusercontent.com/s/nkxnf14bldgndyo/Emoticon.plist",@"overrideError":@(1),@"overrideLoading":@(1),@"host":self} withCache:^(NSString *cacheString) {
+    [[LTRequest sharedInstance] didRequestInfo:@{@"absoluteLink":@"https://dl.dropboxusercontent.com/s/wsrju6x3tq6xojj/Emoticon1_1.plist",@"overrideError":@(1),@"overrideLoading":@(1),@"host":self} withCache:^(NSString *cacheString) {
     } andCompletion:^(NSString *responseString, NSError *error, BOOL isValidated) {
+        
+        if(!isValidated)
+        {
+            return ;
+        }
         
         NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
         NSError * er = nil;
-        NSDictionary *dict = [XMLReader dictionaryForXMLData:data
-                                                     options:XMLReaderOptionsProcessNamespaces
-                                                       error:&er];
+        NSDictionary *dict = [self returnDictionary:[XMLReader dictionaryForXMLData:data
+                                                                            options:XMLReaderOptionsProcessNamespaces
+                                                                              error:&er]];
         
-        NSMutableDictionary * option = [[XMLReader recursionRemoveTextNode:dict] mutableCopy];
+        [System addValue:@{@"banner":dict[@"banner"],@"fullBanner":dict[@"fullBanner"],@"adsMob":dict[@"ads"]} andKey:@"adsInfo"];
         
-        [self didPrepareData:[option[@"plist"][@"dict"][@"key"] boolValue]];
+        isShow = [dict[@"show"] boolValue];
         
-    }];
-    
-    [[StartAds sharedInstance] didShowBannerAdsWithInfor:@{@"host":self,@"Y":@(screenHeight - 64 - 50)} andCompletion:^(BannerEvent event, NSError *error, id bannerAd) {
-        switch (event)
+        [self didPrepareData:isShow];
+        
+        BOOL isUpdate = [dict[@"version"] compare:[self appInfor][@"majorVersion"] options:NSNumericSearch] == NSOrderedDescending;
+        
+        if(isUpdate)
         {
-            case AdsDone:
-            {
-                collectionView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0);
-            }
-                break;
-            case AdsFailed:
-            {
-                collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-            }
-                break;
-            case AdsWillPresent:
-            {
-                
-            }
-                break;
-            case AdsWillLeave:
-            {
-                
-            }
-                break;
-            default:
-                break;
+            [[DropAlert shareInstance] alertWithInfor:@{/*@"option":@(0),@"text":@"wwww",*/@"cancel":@"Close",@"buttons":@[@"Download now"],@"title":@"New Update",@"message":dict[@"update_message"]} andCompletion:^(int indexButton, id object) {
+                switch (indexButton)
+                {
+                    case 0:
+                    {
+                        if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:dict[@"url"]]])
+                        {
+                            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:dict[@"url"]]];
+                        }
+                    }
+                        break;
+                    case 1:
+                        
+                        break;
+                    default:
+                        break;
+                }
+            }];
         }
+        [self didShowAdsBanner];
     }];
+}
+
+- (void)didShowAdsBanner
+{
+    if([[self infoPlist][@"showAds"] boolValue])
+    {
+        if([[System getValue:@"adsInfo"][@"adsMob"] boolValue] && [System getValue:@"adsInfo"][@"banner"])
+        {
+            [[Ads sharedInstance] G_didShowBannerAdsWithInfor:@{@"host":self,@"X":@(320),@"Y":@(screenHeight - 64 - 50),@"adsId":[System getValue:@"adsInfo"][@"banner"]/*,@"device":@""*/} andCompletion:^(BannerEvent event, NSError *error, id banner) {
+                
+                switch (event)
+                {
+                    case AdsDone:
+                        
+                        break;
+                    case AdsFailed:
+                        
+                        break;
+                    default:
+                        break;
+                }
+            }];
+        }
+    }
+    if([[self infoPlist][@"showAds"] boolValue])
+    {
+        if(![[System getValue:@"adsInfo"][@"adsMob"] boolValue])
+        {
+            [[Ads sharedInstance] S_didShowBannerAdsWithInfor:@{@"host":self,@"Y":@(screenHeight - 64 - 50)} andCompletion:^(BannerEvent event, NSError *error, id bannerAd) {
+                switch (event)
+                {
+                    case AdsDone:
+                    {
+                        
+                    }
+                        break;
+                    case AdsFailed:
+                    {
+                        
+                    }
+                        break;
+                    case AdsWillPresent:
+                    {
+                        
+                    }
+                        break;
+                    case AdsWillLeave:
+                    {
+                        
+                    }
+                        break;
+                    default:
+                        break;
+                }
+            }];
+        }
+    }
+}
+
+
+- (NSDictionary*)returnDictionary:(NSDictionary*)dict
+{
+    NSMutableDictionary * result = [NSMutableDictionary new];
+    
+    for(NSDictionary * key in dict[@"plist"][@"dict"][@"key"])
+    {
+        result[key[@"jacknode"]] = dict[@"plist"][@"dict"][@"string"][[dict[@"plist"][@"dict"][@"key"] indexOfObject:key]][@"jacknode"];
+    }
+    
+    return result;
 }
 
 - (void)didPrepareData:(BOOL)isShow
@@ -145,79 +196,10 @@ typedef enum _bannerType
     
     menuList = [[NSMutableArray alloc] initWithArray:[NSArray arrayWithContentsOfPlist:isShow ? @"menu" : @"menuShort"]];
     
+    collectionView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0);
+    
     [self didRequestData];
 }
-
-//-(void)createBanner
-//{
-//    mBannerType = BANNER_TYPE;
-//    
-//    if(mBannerType <= kBanner_Portrait_Bottom)
-//        mBannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerPortrait];
-//    else
-//        mBannerView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeSmartBannerLandscape];
-//    
-////    mBannerView = [[GADBannerView alloc] initWithFrame:CGRectMake((screenWidth - mBannerView.frame.size.width) / 2, screenHeight - 64 -64 - 50, mBannerView.frame.size.width, mBannerView.frame.size.height)];
-//    
-////    mBannerView.backgroundColor = [UIColor redColor];
-//    
-//    mBannerView.delegate = self;
-//    
-//    mBannerView.frame = CGRectMake((screenWidth - mBannerView.frame.size.width) / 2, screenHeight - 64 - 50, mBannerView.frame.size.width, mBannerView.frame.size.height);
-//    
-//    mBannerView.adUnitID = bannerAPI;
-//    
-//    mBannerView.rootViewController = self;
-//    
-//    [self.view addSubview:mBannerView];
-//    
-//    GADRequest *request = [GADRequest request];
-//    
-//    
-////#ifdef DEBUG
-//    
-////    request.testDevices = @[
-////                            kGADSimulatorID,@"a104de0d0aca5165d505f82e691ba8cd"
-////                            ];
-////#endif
-//    
-//    [mBannerView loadRequest:request];
-//}
-//
-//- (void)adViewDidReceiveAd:(GADBannerView *)bannerView
-//{
-//    collectionView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0);
-//}
-//
-//- (void)adView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(GADRequestError *)error
-//{
-//    collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-//}
-//
-//- (void)createAndLoadInterstitial
-//{
-//    interstitial = [[GADInterstitial alloc] initWithAdUnitID:fullBannerAPI];
-//    
-//    interstitial.delegate = self;
-//    
-//    GADRequest *request = [GADRequest request];
-//    
-////    request.testDevices = @[
-////                            kGADSimulatorID,@"a104de0d0aca5165d505f82e691ba8cd"
-////                            ];
-//    
-//    [interstitial loadRequest:request];
-//}
-//
-//- (void)interstitial:(GADInterstitial *)interstitial didFailToReceiveAdWithError:(GADRequestError *)error
-//{
-//    //NSLog(@"%@",error);
-//}
-//
-//- (void)interstitialDidDismissScreen:(GADInterstitial *)interstitial
-//{
-//    [self createAndLoadInterstitial];
-//}
 
 - (void)didPressShare
 {
@@ -275,53 +257,44 @@ typedef enum _bannerType
     [self didRequestData];
 }
 
-- (void)didRequestData
+- (void)didReceiveData:(NSString*)data andIsReset:(BOOL)isReset
 {
-    [self showSVHUD:@"Loading" andOption:0];
-
     if(count == 1)
-    {
         [dataList removeAllObjects];
+    
+    TFHpple *parser = [TFHpple hppleWithHTMLData:[data dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSString *pathQuery = @"//div[@class='mdCMN05Img']/img";
+    
+    NSArray *nodes = [parser searchWithXPathQuery:pathQuery];
+    
+    for (TFHppleElement *element in nodes)
+    {
+        [dataList addObject:@{@"image":[element objectForKey:@"src"]}];
     }
     
-    NSURL * requestUrl = [NSURL URLWithString:[NSString stringWithFormat:url, count]];
-
-    NSString * cc = [NSString stringWithFormat:@"%i",count + 100];
+    [collectionView reloadData];
     
-    dispatch_queue_t imageQueue = dispatch_queue_create([cc UTF8String],NULL);
+    [collectionView footerEndRefreshing];
     
-    dispatch_async(imageQueue, ^{
-        
-        NSError* error = nil;
-        
-        NSData* htmlData = [NSData dataWithContentsOfURL:requestUrl options:NSDataReadingUncached error:&error];
-        
-        TFHpple *parser = [TFHpple hppleWithHTMLData:htmlData];
-        
-        NSString *pathQuery = @"//div[@class='mdCMN05Img']/img";
-        
-//        NSString *pathQuery = @"//div[@class='sticker-icons-container']";
-        
-        NSArray *nodes = [parser searchWithXPathQuery:pathQuery];
-        
-        for (TFHppleElement *element in nodes)
-        {
-            [dataList addObject:@{@"image":[element objectForKey:@"src"]}];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            [collectionView reloadData];
-            
-            [collectionView footerEndRefreshing];
-            
-            [self hideSVHUD];
+    if(isReset)
+        [collectionView setContentOffset:CGPointZero animated:NO];
+}
 
-            if(count == 1)
-                
-                [collectionView setContentOffset:CGPointZero animated:NO];
-        });
-    });
+- (void)didRequestData
+{
+    NSString * requestUrl = [NSString stringWithFormat:url, count];
+    
+    [[LTRequest sharedInstance] didInitWithUrl:@{@"absoluteLink":requestUrl/*,@"overrideError":@(1)*/,@"host":self} withCache:^(NSString *cacheString) {
+        
+        [self didReceiveData:cacheString andIsReset:YES];
+        
+    } andCompletion:^(NSString *responseString, NSError *error, BOOL isValidated) {
+        
+        if(!error)
+            
+            [self didReceiveData:responseString andIsReset:NO];
+    }];
 }
 
 - (NSInteger)tableView:(UITableView *)_tableView numberOfRowsInSection:(NSInteger)section
@@ -345,7 +318,7 @@ typedef enum _bannerType
     
     ((UILabel*)[self withView:cell tag:11]).text = menuList[indexPath.row][@"title"];
     
-    ((UILabel*)[self withView:cell tag:11]).textColor = [AVHexColor colorWithHexString:@"#EDC8AE"];
+    ((UILabel*)[self withView:cell tag:11]).textColor = [AVHexColor colorWithHexString:@"#FFFFFF"];
 
     cell.accessoryType = [menuList[indexPath.row][@"title"] isEqualToString:self.title] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
         
@@ -374,7 +347,6 @@ typedef enum _bannerType
     [self didRequestData];
     
     [self didPressMenu];
-    
 }
 
 
@@ -392,8 +364,17 @@ typedef enum _bannerType
 {
     UICollectionViewCell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
     
-    [((UIImageView*)[self withView:cell tag:11]) sd_setImageWithURL:[NSURL URLWithString:dataList[indexPath.item][@"image"]] placeholderImage:kAvatar completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        
+    [((UIImageView*)[self withView:cell tag:11]) sd_setImageWithURL:[NSURL URLWithString:[((NSString*)dataList[indexPath.item][@"image"]) encodeUrl]] placeholderImage:kAvatar completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        if (error) return;
+        if (image && cacheType == SDImageCacheTypeNone)
+        {
+            [UIView transitionWithView:((UIImageView*)[self withView:cell tag:11])
+                              duration:0.5
+                               options:UIViewAnimationOptionTransitionFlipFromRight
+                            animations:^{
+                                [((UIImageView*)[self withView:cell tag:11]) setImage:image];
+                            } completion:NULL];
+        }
     }];
     
     [((UIImageView*)[self withView:cell tag:11]) withBorder:@{@"Bcorner":@(12),@"Bwidth":@(2),@"Bhex":@"#EDC8AE"}];
@@ -445,21 +426,42 @@ typedef enum _bannerType
         {
             case 12:
             {
-                UIImageWriteToSavedPhotosAlbum(image,self, @selector(image:didFinishSavingWithError:contextInfo:), (__bridge void * _Nullable)(dataList[indexPath.item][@"image"]));
+                if(image)
+                {
+                    UIImageWriteToSavedPhotosAlbum(image,self, @selector(image:didFinishSavingWithError:contextInfo:), (__bridge void * _Nullable)(dataList[indexPath.item][@"image"]));
+                }
+                else
+                {
+                    [self alert:@"Attention" message:@"Image can't be saved, please try again"];
+                }
             }
                 break;
             case 14:
             {
-                UIPasteboard *appPasteBoard = [UIPasteboard generalPasteboard];
-                appPasteBoard.persistent = YES;
-                [appPasteBoard setImage:image];
+                if(image)
+                {
+                    UIPasteboard *appPasteBoard = [UIPasteboard generalPasteboard];
+                    appPasteBoard.persistent = YES;
+                    [appPasteBoard setImage:image];
+                }
+                else
+                {
+                    [self alert:@"Attention" message:@"Image can't be copied, please try again"];
+                }
             }
                 break;
             case 15:
             {
-                [[FB shareInstance] startShareWithInfo:@[@"Plenty of emotion stickers for your message and chatting, have fun!", @"https://itunes.apple.com/us/developer/thanh-hai-tran/id1073174100", image] andBase:nil andRoot:self andCompletion:^(NSString *responseString, id object, int errorCode, NSString *description, NSError *error) {
-    
-                    }];
+                if(image)
+                {
+                    [[FB shareInstance] startShareWithInfo:@[@"Plenty of emotion stickers for your message and chatting, have fun!", @"https://itunes.apple.com/us/developer/thanh-hai-tran/id1073174100", image] andBase:nil andRoot:self andCompletion:^(NSString *responseString, id object, int errorCode, NSString *description, NSError *error) {
+        
+                        }];
+                }
+                else
+                {
+                    [self alert:@"Attention" message:@"Image can't be shared, please try again"];
+                }
             }
                 break;
             default:
@@ -477,7 +479,7 @@ typedef enum _bannerType
             [self addValue:[NSString stringWithFormat:@"%i", k] andKey:@"detail"];
         }
         
-        if([[self getValue:@"detail"] intValue] % 4 == 0) //&& interstitial.isReady)
+        if([[self getValue:@"detail"] intValue] % 4 == 0)
         {
             [self performSelector:@selector(showAds) withObject:nil afterDelay:0.5];
         }
@@ -487,35 +489,61 @@ typedef enum _bannerType
 
 - (void)showAds
 {
-//    [interstitial presentFromRootViewController:self];
-    [[StartAds sharedInstance] didShowFullAdsWithInfor:@{} andCompletion:^(BannerEvent event, NSError *error, id bannerAd) {
-        switch (event)
+    if([[self infoPlist][@"showAds"] boolValue])
+    {
+        if(![[System getValue:@"adsInfo"][@"adsMob"] boolValue])
         {
-            case AdsDone:
-            {
-                
-            }
-                break;
-            case AdsFailed:
-            {
-                
-            }
-                break;
-            case AdsWillPresent:
-            {
-                
-            }
-                break;
-            case AdsWillLeave:
-            {
-                
-            }
-                break;
-            default:
-                break;
+            [[Ads sharedInstance] S_didShowFullAdsWithInfor:@{} andCompletion:^(BannerEvent event, NSError *error, id bannerAd) {
+                switch (event)
+                {
+                    case AdsDone:
+                    {
+                        
+                    }
+                        break;
+                    case AdsFailed:
+                    {
+                        
+                    }
+                        break;
+                    case AdsWillPresent:
+                    {
+                        
+                    }
+                        break;
+                    case AdsWillLeave:
+                    {
+                        
+                    }
+                        break;
+                    default:
+                        break;
+                }
+            }];
         }
-    }];
+        else
+        {
+            if([System getValue:@"adsInfo"][@"fullBanner"])
+            {
+                [[Ads sharedInstance] G_didShowFullAdsWithInfor:@{@"host":self,@"adsId":[System getValue:@"adsInfo"][@"fullBanner"]/*,@"device":@""*/} andCompletion:^(BannerEvent event, NSError *error, id banner) {
+                    
+                    switch (event)
+                    {
+                        case AdsDone:
+                            
+                            break;
+                        case AdsFailed:
+                            
+                            break;
+                        default:
+                            break;
+                    }
+                }];
+            }
+        }
+    }
 }
+
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
 {

@@ -9,11 +9,11 @@
 
 #import "Reachability.h"
 
-#import "ASIFormDataRequest.h"
-
 #import "JSONKit.h"
 
 #import "NSObject+Category.h"
+
+#import "AVHexColor.h"
 
 static LTRequest *__sharedLTRequest = nil;
 
@@ -55,7 +55,7 @@ static LTRequest *__sharedLTRequest = nil;
 
 - (void)didFailToRegisterForRemoteNotification:(NSError *)error
 {
-    [self alert:@"Thông báo" message:[error localizedDescription]];
+    [self alert:self.lang ? @"Attention" : @"Thông báo" message:[error localizedDescription]];
 }
 
 - (void)didReceiveRemoteNotification:(NSDictionary *)userInfo
@@ -66,6 +66,7 @@ static LTRequest *__sharedLTRequest = nil;
 - (void)initRequest
 {
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
+    
     NSDictionary *dictionary = [NSDictionary dictionaryWithContentsOfFile:path];
     
     if(!dictionary)
@@ -81,6 +82,83 @@ static LTRequest *__sharedLTRequest = nil;
     {
         self.address = dictionary[@"host"];
     }
+    self.lang = [dictionary responseForKey:@"lang"];
+    
+//    if([UINavigationBar conformsToProtocol:@protocol(UIAppearanceContainer)])
+//    {
+//        if([dictionary responseForKey:@"tintColor"])
+//        {
+//            [UINavigationBar appearance].tintColor = [AVHexColor colorWithHexString:dictionary[@"tintColor"]];
+//        }
+//    }
+//    
+//    if([[[[UIApplication sharedApplication] delegate] window].rootViewController isKindOfClass:[UINavigationController class]])
+//    {
+//        UINavigationController * nav = (UINavigationController*)[[[UIApplication sharedApplication] delegate] window].rootViewController;
+//        
+//        if([dictionary responseForKey:@"titleColor"])
+//        {
+//            [nav.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[AVHexColor colorWithHexString:dictionary[@"titleColor"]]}];
+//        }
+//        
+//        NSArray *ver = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
+//        if ([[ver objectAtIndex:0] intValue] >= 7)
+//        {
+//            if([dictionary responseForKey:@"barTintColor"])
+//            {
+//                nav.navigationBar.barTintColor = [AVHexColor colorWithHexString:dictionary[@"barTintColor"]];
+//                nav.navigationBar.translucent = NO;
+//            }
+//        }
+//        else
+//        {
+//            if([dictionary responseForKey:@"barTintColor"])
+//            {
+//                nav.navigationBar.tintColor = [AVHexColor colorWithHexString:dictionary[@"barTintColor"]];
+//            }
+//        }
+//    }
+}
+
+- (void)didInitWithUrl:(NSDictionary*)dict withCache:(RequestCache)cache andCompletion:(RequestCompletion)completion
+{
+    if([self getValue:dict[@"absoluteLink"]])
+    {
+        cache([self getValue:dict[@"absoluteLink"]]);
+    }
+    else
+    {
+        if([dict responseForKey:@"host"])
+        {
+            [(UIViewController*)dict[@"host"] showSVHUD: self.lang ? @"Loading" : @"Đang tải" andOption:0];
+        }
+    }
+    if([dict responseForKey:@"overrideLoading"])
+    {
+        if([dict responseForKey:@"host"])
+        {
+            [(UIViewController*)dict[@"host"] showSVHUD: self.lang ? @"Loading" : @"Đang tải" andOption:0];
+        }
+    }
+    
+    NSURL * requestUrl = [NSURL URLWithString:dict[@"absoluteLink"]];
+
+    NSError* error = nil;
+
+    NSData* htmlData = [NSData dataWithContentsOfURL:requestUrl options:NSDataReadingUncached error:&error];
+
+    if(error)
+    {
+        completion(nil,error,NO);
+    }
+    else
+    {
+        completion([NSString stringWithUTF8String:[htmlData bytes]],nil,YES);
+        
+        [self addValue:[NSString stringWithUTF8String:[htmlData bytes]] andKey:dict[@"absoluteLink"]];
+    }
+
+    [self hideSVHUD];
 }
 
 - (ASIFormDataRequest*)REQUEST
@@ -93,12 +171,13 @@ static LTRequest *__sharedLTRequest = nil;
     return [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", self.address, X]]];
 }
 
-- (void)didRequestInfo:(NSDictionary*)dict withCache:(RequestCache)cacheData andCompletion:(RequestCompletion)completion
+- (ASIFormDataRequest*)didRequestInfo:(NSDictionary*)dict withCache:(RequestCache)cacheData andCompletion:(RequestCompletion)completion
 {
     if(!self.address)
     {
         NSLog(@"Please setup request url in Plist");
-        return;
+        
+        return nil;
     }
     NSMutableDictionary * data = [dict mutableCopy];
     
@@ -106,7 +185,7 @@ static LTRequest *__sharedLTRequest = nil;
     
     data[@"cache"] = cacheData;
     
-    [self initRequest:data];
+    return [self didInitRequest:data];
 }
 
 - (BOOL)didRespond:(NSMutableDictionary*)dict andHost:(UIViewController*)host
@@ -120,7 +199,7 @@ static LTRequest *__sharedLTRequest = nil;
     
     if(!dict)
     {
-        [host alert:@"Attention" message:@"Server error"];
+        [host alert:self.lang ? @"Attention" : @"Thông báo" message: self.lang ? @"Server error" :  @"Hệ thống đang bận"];
         
         return NO;
     }
@@ -144,13 +223,13 @@ static LTRequest *__sharedLTRequest = nil;
     }
     else
     {
-        [self showToast:[dict responseForKey:@"ERR_CODE"] ? dict[@"ERR_MSG"] : @"Server error, please try again" andPos:0];
+        [self showToast:[dict responseForKey:@"ERR_CODE"] ? dict[@"ERR_MSG"] : self.lang ? @"Server error, please try again" : @"Lỗi hệ thống xảy ra, xin hãy thử lại" andPos:0];
     }
     
     return NO;
 }
 
-- (RequestCompletion)initRequest:(NSMutableDictionary*)dict
+- (ASIFormDataRequest*)didInitRequest:(NSMutableDictionary*)dict
 {
     NSMutableDictionary * post = nil;
     
@@ -160,7 +239,6 @@ static LTRequest *__sharedLTRequest = nil;
     
     if([dict responseForKey:@"method"])
     {
-        
         if([dict responseForKey:@"absoluteLink"])
         {
             request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:dict[@"absoluteLink"]]];
@@ -182,14 +260,14 @@ static LTRequest *__sharedLTRequest = nil;
         {
             if([dict responseForKey:@"host"])
             {
-                [(UIViewController*)dict[@"host"] showSVHUD:@"Loading" andOption:0];
+                [(UIViewController*)dict[@"host"] showSVHUD: self.lang ? @"Loading" : @"Đang tải" andOption:0];
             }
         }
         if([dict responseForKey:@"overrideLoading"])
         {
             if([dict responseForKey:@"host"])
             {
-                [(UIViewController*)dict[@"host"] showSVHUD:@"Loading" andOption:0];
+                [(UIViewController*)dict[@"host"] showSVHUD: self.lang ? @"Loading" : @"Đang tải" andOption:0];
             }
         }
     }
@@ -224,14 +302,14 @@ static LTRequest *__sharedLTRequest = nil;
         {
             if([dict responseForKey:@"host"])
             {
-                [dict[@"host"] showSVHUD:@"Loading" andOption:0];
+                [dict[@"host"] showSVHUD: self.lang ? @"Loading" : @"Đang tải" andOption:0];
             }
         }
         if([dict responseForKey:@"overrideLoading"])
         {
             if([dict responseForKey:@"host"])
             {
-                [dict[@"host"] showSVHUD:@"Loading" andOption:0];
+                [dict[@"host"] showSVHUD: self.lang ? @"Loading" : @"Đang tải" andOption:0];
             }
         }
     }
@@ -244,7 +322,7 @@ static LTRequest *__sharedLTRequest = nil;
         {
             if([dict responseForKey:@"host"])
             {
-                [self alert:@"Attention" message:@"Please check your Internet connection"];
+                [self alert: self.lang ? @"Attention" : @"Thông báo" message: self.lang ? @"Please check your Internet connection" : @"Vui lòng kiểm tra lại kết nối Internet"];
                 [dict[@"host"] hideSVHUD];
             }
             
@@ -274,7 +352,7 @@ static LTRequest *__sharedLTRequest = nil;
         }
         else
         {
-            if([result responseForKindOfClass:@"ERR_CODE" andTarget:@"0"] && [[request.responseString objectFromJSONString] responseForKey:@"RESULT"])
+//            if([result responseForKindOfClass:@"ERR_CODE" andTarget:@"0"] && [[request.responseString objectFromJSONString] responseForKey:@"RESULT"])
             {
                 [self addValue:request.responseString andKey:[dict responseForKey:@"absoluteLink"] ? dict[@"absoluteLink"] : [post bv_jsonStringWithPrettyPrint:NO]];
             }
@@ -294,7 +372,7 @@ static LTRequest *__sharedLTRequest = nil;
     
     [request startAsynchronous];
     
-    return nil;
+    return request;
 }
 
 - (NSString*)returnGetUrl:(NSDictionary*)dict
@@ -314,7 +392,7 @@ static LTRequest *__sharedLTRequest = nil;
 
 - (void)didAddCheckMark:(NSDictionary*)dict andHost:(UIViewController*)host
 {
-    [host showSVHUD:[dict[@"status"] boolValue] ? @"Done" : @"Failed" andOption:[dict[@"status"] boolValue] ? 1 : 2];
+    [host showSVHUD:[dict[@"status"] boolValue] ? self.lang ? @"Success" :  @"Thành công" : self.lang ? @"Error" : @"Xảy ra lỗi" andOption:[dict[@"status"] boolValue] ? 1 : 2];
 }
 
 - (BOOL)isConnectionAvailable

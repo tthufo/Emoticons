@@ -46,12 +46,6 @@
 
 #define kStartAppDev @"101179665"
 
-#define bannerAPI @"ca-app-pub-9549102114287819/6687876689"
-
-#define fullBannerAPI @"ca-app-pub-9549102114287819/8164609882"
-
-#define kAPI @"AIzaSyDRgzUFgHr3SjyYfEzmXoYjH459Upmsb_Q"
-
 ///Header
 
 #import <ASIHTTPRequest.h>
@@ -72,6 +66,6 @@
 
 #import "EM_MenuView.h"
 
-#import "StartAds.h"
+#import "Ads.h"
 
 #endif /* PrefixHeader_pch */
